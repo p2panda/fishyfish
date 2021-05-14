@@ -2,7 +2,7 @@
 
 Command line interface for p2panda [`nodes`](https://github.com/p2panda/aquadoggo).
 
-## Features:
+## Features
 
 - Query entries by schema
 - Create schemas
