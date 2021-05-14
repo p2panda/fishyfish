@@ -39,7 +39,7 @@ export const createSchema = async (
 const formatSchema = (entry: EntryRecord) => {
   const name = chalk.cyan(entry.message.fields.name);
   const description = entry.message.fields.description;
-  const fields = "- " + entry.message.fields.fields.split(",").join("\n- ");
+  const fields = "- " + entry.message.fields.fields?.split(",").join("\n- ");
   const hash = chalk.grey(entry.encoded.entryHash);
   return `${name}: ${description}\n${fields}\n${hash}`;
 };
