@@ -8,6 +8,42 @@ import { getKeyPair } from "./utils.js";
 const SCHEMA_SCHEMA =
   "00401d76566758a5b6bfc561f1c936d8fc86b5b42ea22ab1dabf40d249d27dd906401fde147e53f44c103dd02a254916be113e51de1077a946a3a0c1272b9b348437";
 
+/**
+ * Validate fields for a new schema-schema entry.
+ *
+ * This should probably be part of `p2panda-js`
+ *
+ * @param name Name of the new schema
+ * @param description Explains purpose and limitations of the schema
+ * @param fields comma-separated list of fieldnames
+ */
+const validateSchema = (
+  name: string,
+  description: string,
+  fields: string[]
+): boolean => {
+  let error = "";
+  if (!name.match(/^\w{1,80}$/))
+    error += "Schema name must have 1-80 alphanumeric characters\n";
+
+  if (!description.match(/^[\w\s]{0,256}$/))
+    error +=
+      "Schema description must have 0-256 alphanumeric and whitespace characters\n";
+
+  if (
+    !fields.reduce((acc, cur) => (cur.match(/^\w{1,80}$/) ? acc : false), true)
+  )
+    error +=
+      "Field names must be a list of 1-80 character alphanumeric field names\n";
+
+  if (error.length > 0) {
+    console.log(chalk.red(error));
+    return false;
+  }
+
+  return true;
+};
+
 const createSchema = async (
   name: string,
   description: string,
@@ -16,6 +52,8 @@ const createSchema = async (
 ) => {
   const keyPair = await getKeyPair();
   const session = new Session(options.node);
+
+  if (!validateSchema(name, description, fields)) process.exit(1);
 
   const schemaDefinition = {
     name,
@@ -70,8 +108,7 @@ async function main() {
     .description("create a new schema", {
       name: "Name of the schema (80 characters, no whitespace characters)",
       description: "Description (200 characters)",
-      fields:
-        "Comma-separated list of fields in this schema (only text values)",
+      fields: "Space-separated list of fields in this schema",
     })
     .option(
       "-n, --node <node>",
