@@ -1,4 +1,4 @@
-# fishyfish
+# 🐡 fishyfish
 
 Command line interface for p2panda nodes
 
