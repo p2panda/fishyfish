@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { Instance, Session } from "./p2panda-api/index.js";
+import { Entry, EntryRecord } from "./p2panda-api/types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
@@ -17,7 +18,7 @@ export const createSchema = async (
   const schemaDefinition = {
     name,
     description,
-    fields: fields.join(","),
+    fields: fields.map((field) => `${field}(text)`).join(","),
   };
 
   console.log(chalk.grey(JSON.stringify(schemaDefinition, null, 2)));
@@ -33,4 +34,29 @@ export const createSchema = async (
     process.exit(1);
   }
   console.log(chalk.blue(`New schema ${chalk.white(name)}`));
+};
+
+const formatSchema = (entry: EntryRecord) => {
+  const name = chalk.cyan(entry.message.fields.name);
+  const description = entry.message.fields.description;
+  const fields = "- " + entry.message.fields.fields.split(",").join("\n- ");
+  const hash = chalk.grey(entry.encoded.entryHash);
+  return `${name}: ${description}\n${fields}\n${hash}`;
+};
+
+export const listSchemas = async (schemaHash, options) => {
+  const session = new Session(options.node);
+  const entries: EntryRecord[] = await session.queryEntries(SCHEMA_SCHEMA);
+  if (schemaHash) {
+    const schema = entries.find(
+      (entry) => entry.encoded.entryHash === schemaHash
+    );
+    if (schema) {
+      console.log(formatSchema(schema));
+    } else {
+      console.log(chalk.yellow("Nothing found for this schema hash"));
+    }
+  } else {
+    entries.map((entry) => console.log(formatSchema(entry)));
+  }
 };

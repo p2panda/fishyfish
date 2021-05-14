@@ -6,6 +6,7 @@ Features:
 
 - Query entries by schema
 - Create schemas
+- List schemas
 
 ```
 # Install dependencies

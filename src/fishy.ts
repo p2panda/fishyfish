@@ -2,7 +2,7 @@
 import program from "commander";
 
 import { queryBySchema } from "./query.js";
-import { createSchema } from "./schema.js";
+import { createSchema, listSchemas } from "./schema.js";
 
 async function main() {
   program
@@ -31,6 +31,18 @@ async function main() {
       "http://localhost:2020"
     )
     .action(createSchema);
+
+  program
+    .command("schemas [hash]")
+    .description("list schemas", {
+      hash: "show info for the schema with this hash",
+    })
+    .option(
+      "-n, --node <node>",
+      "node endpoint to connect with",
+      "http://localhost:2020"
+    )
+    .action(listSchemas);
 
   await program.parseAsync(process.argv);
 }
