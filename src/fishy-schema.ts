@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import program from "commander";
 
-import { Instance, Session } from "./p2panda-api/index.js";
-import { Entry, EntryRecord } from "./p2panda-api/types.js";
+import { Session } from "./p2panda-api/index.js";
+import { EntryRecord } from "./p2panda-api/types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
@@ -43,14 +43,18 @@ const validateSchema = (
   return true;
 };
 
+type CreateSchemaOptions = {
+  node: string;
+};
+
 const createSchema = async (
   name: string,
   description: string,
   fields: string[],
-  options
+  options: CreateSchemaOptions
 ) => {
   const keyPair = await getKeyPair();
-  const session = new Session(options.node);
+  const session = new Session(options.node).schema(SCHEMA_SCHEMA);
 
   if (!validateSchema(name, description, fields)) process.exit(1);
 
@@ -63,19 +67,22 @@ const createSchema = async (
   console.log(chalk.grey(JSON.stringify(schemaDefinition, null, 2)));
 
   try {
-    await Instance.create(schemaDefinition, {
+    await session.create(schemaDefinition, {
       keyPair,
-      schema: SCHEMA_SCHEMA,
       session,
     });
   } catch (err) {
-    console.log(chalk.grey("node rejects fishy"), chalk.red(err.message));
+    console.log(chalk.grey("fishy rejected"), chalk.red(err.message));
     process.exit(1);
   }
   console.log(chalk.blue(`New schema ${chalk.white(name)}`));
 };
 
-const listSchemas = async (options) => {
+type ListSchemasOptions = {
+  node: string;
+};
+
+const listSchemas = async (options: ListSchemasOptions) => {
   const session = new Session(options.node);
   const entries: EntryRecord[] = await session.queryEntries(SCHEMA_SCHEMA);
 
