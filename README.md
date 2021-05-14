@@ -1,20 +1,20 @@
 # 🐡 fishyfish
 
-Command line interface for p2panda nodes
+Command line interface for p2panda [`nodes`](https://github.com/p2panda/aquadoggo).
 
-Features:
+## Features:
 
 - Query entries by schema
 - Create schemas
 - List schemas
 
-```
-# Install dependencies
+## Development
 
+```bash
+# Install dependencies
 npm install
 
 # Build and `npm link` p2panda-js for now
-
 npm link p2panda-js
 
 # Use CLI in development mode.
