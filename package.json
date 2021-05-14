@@ -1,7 +1,9 @@
 {
   "name": "fishyfish",
   "version": "1.0.0",
-  "bin": "./dist/fishy.js",
+  "bin": {
+    "fishy": "./dist/fishy.js"
+  },
   "bugs": {
     "url": "https://github.com/p2panda/fishyfish/issues"
   },
