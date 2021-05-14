@@ -1,27 +1,19 @@
 import chalk from "chalk";
 import { Session } from "./p2panda-api/index.js";
-import { getKeyPair } from "./utils.js";
 
-type Format = "compact" | "long";
-
-const printHeader = (format: Format) => {
+const printHeader = (long) => {
   let header = chalk.blue("author".padEnd(9));
   header += chalk.grey("entry".padEnd(9));
   header += chalk.grey("payload".padEnd(9));
   header += chalk.green("action".padEnd(7));
-  if (format == "long") header += chalk.white("message fields");
+  if (!long) header += chalk.white("message fields");
+  else header += "\n";
   console.log(header);
 };
 
-const formatMessage = (message, format: Format) => {
-  let rv;
-  if (format == null || format === "compact") {
-    if (message == null) {
-      rv = "---";
-    } else {
-      rv = Object.keys(message.fields).join(" ");
-    }
-  } else if (format === "long") {
+const formatMessage = (message, long) => {
+  let rv: string;
+  if (long) {
     if (message == null) {
       rv = "\nno message available";
     } else {
@@ -32,19 +24,16 @@ const formatMessage = (message, format: Format) => {
           .join("");
     }
   } else {
-    console.log(
-      chalk.red(`Unknown format ${format}. Please use 'compact' or 'long'`)
-    );
-    process.exit(1);
+    if (message == null) {
+      rv = "---";
+    } else {
+      rv = Object.keys(message.fields).join(" ");
+    }
   }
   return rv;
 };
 
-export const queryBySchema = async (
-  schema: string,
-  format: Format,
-  options
-) => {
+export const queryBySchema = async (schema: string, options) => {
   const session = new Session(options.node);
   const entries = await session.queryEntries(schema);
 
@@ -52,10 +41,10 @@ export const queryBySchema = async (
     chalk.white(`${entries.length} entries with schema ${schema.slice(-8)}\n`)
   );
 
-  printHeader(format);
+  printHeader(options.long);
 
   for (const entry of entries as any[]) {
-    const message = formatMessage(entry.message, format);
+    const message = formatMessage(entry.message, options.long);
     console.log(
       chalk.blue(entry.encoded.author.slice(-8)),
       chalk.grey(entry.encoded.entryHash.slice(-8)),

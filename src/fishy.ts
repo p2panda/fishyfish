@@ -7,17 +7,19 @@ import { createSchema } from "./schema.js";
 async function main() {
   program
     .version("1.0.0")
-    .description("A command line interface for p2panda nodes")
-    .command("query <schemaHash> [format]")
+    .description("A command line interface for p2panda nodes");
+
+  program
+    .command("query <schemaHash>")
     .description("request all entries of this schema", {
-      schemaHash: "hash of a schema to query",
-      format: "either 'compact' (default) or 'long'",
+      schemaHash: "hash of a p2panda schema to query",
     })
     .option(
       "-n, --node <node>",
       "node endpoint to connect with",
       "http://localhost:2020"
     )
+    .option("-l, --long", "long format", false)
     .action(queryBySchema);
 
   program
