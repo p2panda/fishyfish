@@ -1,4 +1,6 @@
 import chalk from "chalk";
+import program from "commander";
+
 import { Session } from "./p2panda-api/index.js";
 
 const printHeader = (long) => {
@@ -33,7 +35,7 @@ const formatMessage = (message, long) => {
   return rv;
 };
 
-export const queryBySchema = async (schema: string, options) => {
+const queryBySchema = async (schema: string, options) => {
   const session = new Session(options.node);
   const entries = await session.queryEntries(schema);
 
@@ -54,3 +56,21 @@ export const queryBySchema = async (schema: string, options) => {
     );
   }
 };
+
+async function main() {
+  program
+    .command("schema <schemaHash>")
+    .description("list all entries of this schema", {
+      schemaHash: "hash of a p2panda schema to query",
+    })
+    .option("-l, --long", "long format", false)
+    .option(
+      "-n, --node <node>",
+      "node endpoint to connect with",
+      "http://localhost:2020"
+    )
+    .action(queryBySchema);
+
+  await program.parseAsync(process.argv);
+}
+main();
