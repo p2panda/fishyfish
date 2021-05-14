@@ -2,9 +2,15 @@ import p2panda from "p2panda-js";
 import { RequestManager, HTTPTransport, Client } from "@open-rpc/client-js";
 
 import { log } from "./index.js";
-import { EntryArgs, EntryRecord, EncodedEntry } from "~/p2panda-api/types.js";
+import {
+  EntryArgs,
+  EntryRecord,
+  EncodedEntry,
+  Fields,
+} from "~/p2panda-api/types.js";
 
 import type { Resolved } from "./index.js";
+import Instance from "./instance.js";
 import { marshallResponseFields } from "./utils.js";
 
 export default class Session {
@@ -12,7 +18,7 @@ export default class Session {
   endpoint: string;
 
   // An rpc client connected to the confgiured endpoint
-  private client: Client;
+  client: Client;
 
   // The wasm library from p2panda-rs. To ensure that it is loaded before
   // using it await `this.loadWasm()`
@@ -25,6 +31,54 @@ export default class Session {
     this.endpoint = endpoint;
     const transport = new HTTPTransport(endpoint);
     this.client = new Client(new RequestManager([transport]));
+  }
+
+  __schema: string;
+
+  get _schema(): string {
+    if (!this.__schema) {
+      throw new Error(
+        "Requires a schema. Configure a schema with " +
+          "`session.schema()` or with the `options` parameter on methods."
+      );
+    }
+    return this._schema;
+  }
+
+  set _schema(val) {
+    this.__schema = val;
+  }
+
+  /**
+   * Preconfigure a schema
+   *
+   * @param val schema hash
+   * @returns Session
+   */
+  schema(val: string): Session {
+    this._schema = val;
+    return this;
+  }
+
+  __keyPair: string;
+
+  get _keyPair(): string {
+    if (!this.__keyPair) {
+      throw new Error(
+        "Requires a signing key pair. Configure a key pair with " +
+          "`session.keyPair()` or with the `options` parameter on methods."
+      );
+    }
+    return this._keyPair;
+  }
+
+  set _keyPair(val) {
+    this.__keyPair = val;
+  }
+
+  keyPair(val: string): Session {
+    this._keyPair = val;
+    return this;
   }
 
   // Load and return the WebAssembly p2panda library.
@@ -109,7 +163,48 @@ export default class Session {
     );
   }
 
+  // Instance operations
+
+  /**
+   * Signs and publishes a `create` entry for the given user data and matching schema.
+   *
+   * Caches arguments for creating the next entry of this schema in the given session.
+   *
+   * @param fields user data to publish with the new entry, needs to match schema
+   * @param instanceArgs optional config object:
+   * @param instanceArgs.keyPair will be used to sign the new entry
+   * @param instanceArgs.schema hex-encoded schema id
+   * @example
+   * const messageFields = {
+   *   message: 'ahoy'
+   * };
+   * await new Session(endpoint)
+   *   .schema(schema)
+   *   .keyPair(keyPair)
+   *   .create(messageFields);
+   */
+  async create(fields: Fields, options) {
+    Instance.create(fields, {
+      schema: this._schema,
+      keyPair: this._keyPair,
+      session: this,
+      ...options,
+    });
+    return this;
+  }
+
+  async update(hash: string, fields: Fields, options) {
+    throw new Error("not implemented");
+  }
+
+  async delete(hash: string, options) {
+    throw new Error("not implemented");
+  }
+
   toString(): string {
-    return `<Session ${this.endpoint}>`;
+    const schemaStr = this._schema
+      ? ` with schema ${this._schema.slice(-8)}`
+      : "";
+    return `<Session ${this.endpoint}${schemaStr}>`;
   }
 }

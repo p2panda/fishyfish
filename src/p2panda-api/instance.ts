@@ -69,22 +69,6 @@ const signPublishEntry = async (
 
 /**
  * Signs and publishes a `create` entry for the given user data and matching schema.
- *
- * Caches arguments for creating the next entry of this schema in the given session.
- *
- * @param fields user data to publish with the new entry, needs to match schema
- * @param instanceArgs config object:
- * @param instanceArgs.keyPair will be used to sign the new entry
- * @param instanceArgs.schema hex-encoded schema id
- * @param instanceArgs.session will be used to publish the new entry
- * @example
- * await Instance.create({
- *   message: { Text: 'hello' }
- * }, {
- *  keyPair,
- *  schema,
- *  session
- * });
  */
 const create = async (
   fields: Fields,
