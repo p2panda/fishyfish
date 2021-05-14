@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "target": "es5",
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"]
+}
