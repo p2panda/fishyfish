@@ -25,7 +25,6 @@ export default class Session {
     this.endpoint = endpoint;
     const transport = new HTTPTransport(endpoint);
     this.client = new Client(new RequestManager([transport]));
-    this.loadWasm();
   }
 
   // Load and return the WebAssembly p2panda library.
@@ -38,7 +37,11 @@ export default class Session {
       if (this.p2panda.default != null) {
         log("fallback loader from `p2panda.default`");
         this.p2panda = await p2panda.default;
+      } else {
+        log("loaded wasm lib");
       }
+    } else {
+      log("access cached wasm lib");
     }
     return this.p2panda;
   }
