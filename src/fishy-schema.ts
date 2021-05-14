@@ -26,15 +26,14 @@ const validateSchema = (
   if (!name.match(/^\w{1,80}$/))
     error += "Schema name must have 1-80 alphanumeric characters\n";
 
-  if (!description.match(/^[\w\s]{0,256}$/))
-    error +=
-      "Schema description must have 0-256 alphanumeric and whitespace characters\n";
+  if (!description.match(/^.{0,256}$/))
+    error += "Schema description must have 0-256 characters\n";
 
   if (
     !fields.reduce((acc, cur) => (cur.match(/^\w{1,80}$/) ? acc : false), true)
   )
     error +=
-      "Field names must be a list of 1-80 character alphanumeric field names\n";
+      "Field names must be a list of 1-80 character alphanumeric names\n";
 
   if (error.length > 0) {
     console.log(chalk.red(error));
