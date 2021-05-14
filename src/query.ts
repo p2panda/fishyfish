@@ -2,10 +2,10 @@ import chalk from "chalk";
 import { Session } from "./p2panda-api/index.js";
 
 const printHeader = (long) => {
-  let header = chalk.blue("author".padEnd(9));
+  let header = chalk.cyan("author".padEnd(9));
+  header += chalk.green("action".padEnd(7));
   header += chalk.grey("entry".padEnd(9));
   header += chalk.grey("payload".padEnd(9));
-  header += chalk.green("action".padEnd(7));
   if (!long) header += chalk.white("message fields");
   else header += "\n";
   console.log(header);
@@ -46,10 +46,10 @@ export const queryBySchema = async (schema: string, options) => {
   for (const entry of entries as any[]) {
     const message = formatMessage(entry.message, options.long);
     console.log(
-      chalk.blue(entry.encoded.author.slice(-8)),
+      chalk.cyan(entry.encoded.author.slice(-8)),
+      chalk.green(entry.message.action),
       chalk.grey(entry.encoded.entryHash.slice(-8)),
       chalk.grey(entry.encoded.payloadHash.slice(-8)),
-      chalk.green(entry.message.action),
       chalk.white(message)
     );
   }
