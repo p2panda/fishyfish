@@ -26,3 +26,7 @@ npm start -- query schema 0040cf94f6d605657e90c543b0c919070cdaaf7209c5e1ea58acb8
 # Build
 npm run build
 ```
+
+## License
+
+[`MIT`](LICENSE)
