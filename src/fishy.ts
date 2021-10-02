@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #!/usr/bin/env node
 import program from "commander";
 
