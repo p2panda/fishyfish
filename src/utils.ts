@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import chalk from "chalk";
 import p2panda from "p2panda-js";
 import appDataPath from "appdata-path";

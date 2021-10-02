@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import chalk from "chalk";
 import program from "commander";
 
