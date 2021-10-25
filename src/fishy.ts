@@ -1,6 +1,6 @@
+#!/usr/bin/env node
 // SPDX-License-Identifier: MIT
 
-#!/usr/bin/env node
 import program from "commander";
 
 async function main() {

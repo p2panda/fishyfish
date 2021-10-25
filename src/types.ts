@@ -1,12 +1,12 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 /**
  * Arguments for publishing the next entry
  */
 export type EntryArgs = {
-  entryHashSkiplink: string | null;
-  entryHashBacklink: string | null;
-  lastSeqNum: number | null;
+  entryHashSkiplink: string | undefined;
+  entryHashBacklink: string | undefined;
+  seqNum: number;
   logId: number;
 };
 
@@ -45,18 +45,17 @@ export type Entry = {
  * Decoded form of a message, which can create, update or delete instances
  */
 export type Message = {
-  action: 'create' | 'update' | 'delete';
+  action: "create" | "update" | "delete";
   schema: string;
-  fields: Fields;
+  fields?: Fields;
+  id?: string;
 };
 
 /**
  * Object containing message field values
  */
 export type Fields = {
-  // currently only a schema with a text message is supported
-  // [fieldname: string]: boolean | number | string;
-  [fieldname: string]: string;
+  [fieldname: string]: boolean | number | string;
 };
 
 /**
@@ -74,7 +73,7 @@ export type EntryTagged = {
  * Decoded form of a message, which can create, update or delete instances
  */
 export type MessageTagged = {
-  action: 'create' | 'update' | 'delete';
+  action: "create" | "update" | "delete";
   schema: string;
   fields: FieldsTagged;
 };
@@ -84,12 +83,48 @@ export type MessageTagged = {
  */
 export type FieldsTagged = {
   // currently only a schema with a text message is supported
-  [fieldname: string]: MessageValueText;
+  [fieldname: string]: MessageValue;
+};
+
+export type MessageValue =
+  | MessageValueText
+  | MessageValueBool
+  | MessageValueInt;
+
+/**
+ * A message value of `boolean` type
+ */
+export type MessageValueBool = {
+  value: boolean;
+  type: "bool";
+};
+
+/**
+ * A message value of `number` type, which must be an integer
+ */
+export type MessageValueInt = {
+  value: number;
+  type: "int";
 };
 
 /**
  * A message value of `string` type
  */
 export type MessageValueText = {
-  Text: string;
+  value: string;
+  type: "str";
+};
+
+export type InstanceRecord = Record<
+  string,
+  boolean | number | string | unknown
+> & {
+  _meta: {
+    id: string;
+    author: string;
+    deleted: boolean;
+    edited: boolean;
+    entries: EntryRecord[];
+    schema: string;
+  };
 };
