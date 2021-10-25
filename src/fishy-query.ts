@@ -3,8 +3,8 @@
 import chalk from "chalk";
 import program from "commander";
 
-import { Session } from "./p2panda-api/index.js";
-import { EntryRecord } from "./p2panda-api/types.js";
+import p2panda from "p2panda-js";
+import { EntryRecord } from "./types";
 
 const printHeader = (long) => {
   let header = chalk.cyan("author".padEnd(9));
@@ -39,8 +39,8 @@ const formatMessage = (message, long) => {
 };
 
 const queryBySchema = async (schema: string, options) => {
-  const session = new Session(options.node);
-  const entries: EntryRecord[] = await session.queryEntries(schema);
+  const session = new p2panda.Session(options.node);
+  const entries: EntryRecord[] = await session.query({ schema });
 
   console.log(
     chalk.white(`${entries.length} entries with schema ${schema.slice(-8)}\n`)

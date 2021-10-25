@@ -7,8 +7,6 @@ import path from "path";
 import fs from "fs";
 
 export const getKeyPair = async () => {
-  const { KeyPair } = await p2panda.default;
-
   // os dependent folder for application data
   const dataDir = appDataPath("fishyfish");
 
@@ -27,10 +25,11 @@ export const getKeyPair = async () => {
 
   if (!privateKey) {
     console.log(chalk.green("New signing key created"), chalk.grey(fname));
-    const keyPair = new KeyPair();
-    privateKey = keyPair.privateKey();
+    const keyPair = p2panda.createKeyPair();
+    privateKey = keyPair.privateKey;
     fs.writeFileSync(fname, privateKey);
+    return keyPair;
   }
 
-  return KeyPair.fromPrivateKey(privateKey);
+  return p2panda.recoverKeyPair(privateKey);
 };

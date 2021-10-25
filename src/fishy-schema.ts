@@ -2,9 +2,9 @@
 
 import chalk from "chalk";
 import program from "commander";
+import p2panda from "p2panda-js";
 
-import { Session } from "./p2panda-api/index.js";
-import { EntryRecord } from "./p2panda-api/types.js";
+import { InstanceRecord } from "./types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
@@ -56,7 +56,7 @@ const createSchema = async (
   options: CreateSchemaOptions
 ) => {
   const keyPair = await getKeyPair();
-  const session = new Session(options.node).schema(SCHEMA_SCHEMA);
+  const session = new p2panda.Session(options.node).setSchema(SCHEMA_SCHEMA);
 
   if (!validateSchema(name, description, fields)) process.exit(1);
 
@@ -85,17 +85,20 @@ type ListSchemasOptions = {
 };
 
 const listSchemas = async (options: ListSchemasOptions) => {
-  const session = new Session(options.node);
-  const entries: EntryRecord[] = await session.queryEntries(SCHEMA_SCHEMA);
+  const session = new p2panda.Session(options.node);
+  const entries: InstanceRecord[] = await session.query({
+    schema: SCHEMA_SCHEMA,
+  });
 
-  entries.map((entry: EntryRecord) => {
-    const name = chalk.cyan(entry.message.fields.name);
-    const description = entry.message.fields.description;
-    const fields = "- " + entry.message.fields.fields?.split(",").join("\n- ");
+  entries.map((entry: InstanceRecord) => {
+    console.log(entry);
+    const name = chalk.cyan(entry.name);
+    const description = entry.description;
+
+    const fieldsRaw = entry.fields as string;
+    const fields = "- " + fieldsRaw.split(",").join("\n- ");
     // Split hash onto two lines by regexing groups of max 66 char length
-    const hash = chalk.grey(
-      entry.encoded.entryHash.match(/(.{1,66})/g).join("\n")
-    );
+    const hash = chalk.grey(entry._meta.id.match(/(.{1,66})/g).join("\n"));
     console.log(`${name}: ${description}\n${fields}\n${hash}\n`);
   });
 };
