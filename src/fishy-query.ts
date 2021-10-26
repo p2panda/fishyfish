@@ -39,12 +39,14 @@ const formatMessage = (message, long) => {
 };
 
 const queryBySchema = async (schema: string, options) => {
-  const session = new p2panda.Session(options.node);
-  const entries: EntryRecord[] = await session.query({ schema });
+  const session = new p2panda.Session(options.node).setSchema(schema);
+  const entries: EntryRecord[] = await session.query();
 
   console.log(
     chalk.white(`${entries.length} entries with schema ${schema.slice(-8)}\n`)
   );
+
+  if (entries.length === 0) return;
 
   printHeader(options.long);
 
