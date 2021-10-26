@@ -1,0 +1,8 @@
+*.tgz
+.eslintignore
+.eslintrc.js
+.nvmrc
+.prettierignore
+.prettierrc.js
+src
+tsconfig.json
