@@ -91,7 +91,6 @@ const listSchemas = async (options: ListSchemasOptions) => {
   });
 
   entries.map((entry: InstanceRecord) => {
-    console.log(entry);
     const name = chalk.cyan(entry.name);
     const description = entry.description;
 
