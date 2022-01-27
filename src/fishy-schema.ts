@@ -8,7 +8,7 @@ import { InstanceRecord } from "./types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
-  "00401d76566758a5b6bfc561f1c936d8fc86b5b42ea22ab1dabf40d249d27dd906401fde147e53f44c103dd02a254916be113e51de1077a946a3a0c1272b9b348437";
+  "0020c65567ae37efea293e34a9c7d13f8f2bf23dbdc3b5c7b9ab46293111c48fc78b";
 
 /**
  * Validate fields for a new schema-schema entry.
