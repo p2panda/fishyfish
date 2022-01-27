@@ -15,10 +15,11 @@ Command line interface for p2panda [`nodes`](https://github.com/p2panda/aquadogg
 fishy schema list
 
 # Create a new schema
-fishy schema create record "Releases for the record shop" name,artist,year,price
+fishy schema create record "Releases for the record shop" name artist year price
+fishy schema list
 
 # Query a schema
-fishy query schema 0040cf94f6d605657e90c543b0c919070cdaaf7209c5e1ea58acb8f3568fa2114268dc9ac3bafe12af277d286fce7dc59b7c0c348973c4e9dacbe79485e56ac2a702
+fishy query schema 0020c65567ae37efea293e34a9c7d13f8f2bf23dbdc3b5c7b9ab46293111c48fc78b
 ```
 
 Omit a command's parameters to see a more detailed usage reference.
@@ -33,7 +34,7 @@ npm install
 npm start
 
 # Pass <args> using two dashes.
-npm start -- query schema 0040cf94f6d605657e90c543b0c919070cdaaf7209c5e1ea58acb8f3568fa2114268dc9ac3bafe12af277d286fce7dc59b7c0c348973c4e9dacbe79485e56ac2a702 --node https://welle.liebechaos.org/ --long
+npm start -- query schema 0020c65567ae37efea293e34a9c7d13f8f2bf23dbdc3b5c7b9ab46293111c48fc78b --node https://welle.liebechaos.org/ --long
 
 # Build
 npm run build
