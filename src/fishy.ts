@@ -8,6 +8,7 @@ async function main() {
     .version("0.0.1")
     .description("A command line interface for p2panda nodes")
     .command("query [selector]", "query entries")
+    .command("decode [selector]", "decode entries and operations")
     .command("schema [command]", "create and list schemas");
 
   await program.parseAsync(process.argv);
