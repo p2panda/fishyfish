@@ -39,8 +39,13 @@ const formatMessage = (message, long) => {
 };
 
 const queryBySchema = async (schema: string, options) => {
-  const session = new p2panda.Session(options.node).setSchema(schema);
-  const entries: EntryRecord[] = await session.query();
+  const session = new p2panda.Session(options.node);
+  let entries: EntryRecord[];
+  try {
+    entries = await session.queryEntries(schema);
+  } catch(err) {
+    throw new Error(`Error querying entries: ${err.message}`)
+  }
 
   console.log(
     chalk.white(`${entries.length} entries with schema ${schema.slice(-8)}\n`)
@@ -51,10 +56,10 @@ const queryBySchema = async (schema: string, options) => {
   printHeader(options.long);
 
   for (const entry of entries) {
-    const message = formatMessage(entry.message, options.long);
+    const message = formatMessage(entry.operation, options.long);
     console.log(
       chalk.cyan(entry.encoded.author.slice(-8)),
-      chalk.green(entry.message.action),
+      chalk.green(entry.operation.action),
       chalk.grey(entry.encoded.entryHash.slice(-8)),
       chalk.grey(entry.encoded.payloadHash.slice(-8)),
       chalk.white(message)
