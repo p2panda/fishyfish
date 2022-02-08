@@ -4,11 +4,11 @@ import chalk from "chalk";
 import program from "commander";
 import p2panda from "p2panda-js";
 
-import { InstanceRecord } from "./types.js";
+import { DocumentView } from "./types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
-  "00401d76566758a5b6bfc561f1c936d8fc86b5b42ea22ab1dabf40d249d27dd906401fde147e53f44c103dd02a254916be113e51de1077a946a3a0c1272b9b348437";
+  "0020c65567ae37efea293e34a9c7d13f8f2bf23dbdc3b5c7b9ab46293111c48fc78b";
 
 /**
  * Validate fields for a new schema-schema entry.
@@ -86,18 +86,18 @@ type ListSchemasOptions = {
 
 const listSchemas = async (options: ListSchemasOptions) => {
   const session = new p2panda.Session(options.node);
-  const entries: InstanceRecord[] = await session.query({
+  const schemaDocs: DocumentView[] = await session.query({
     schema: SCHEMA_SCHEMA,
   });
 
-  entries.map((entry: InstanceRecord) => {
-    const name = chalk.cyan(entry.name);
-    const description = entry.description;
+  schemaDocs.map((schema: DocumentView) => {
+    const name = chalk.cyan(schema.name);
+    const description = schema.description;
 
-    const fieldsRaw = entry.fields as string;
+    const fieldsRaw = schema.fields as string;
     const fields = "- " + fieldsRaw.split(",").join("\n- ");
     // Split hash onto two lines by regexing groups of max 66 char length
-    const hash = chalk.grey(entry._meta.id.match(/(.{1,66})/g).join("\n"));
+    const hash = chalk.grey(schema._meta.id.match(/(.{1,66})/g).join("\n"));
     console.log(`${name}: ${description}\n${fields}\n${hash}\n`);
   });
 };
