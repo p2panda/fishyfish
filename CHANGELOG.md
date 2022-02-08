@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Use p2panda-js 0.3.0
+
 ## [0.1.0]
 
 ### Updated
