@@ -115,7 +115,7 @@ export type OperationValueText = {
   type: "str";
 };
 
-export type InstanceRecord = Record<
+export type DocumentView = Record<
   string,
   boolean | number | string | unknown
 > & {

@@ -4,7 +4,7 @@ import chalk from "chalk";
 import program from "commander";
 import p2panda from "p2panda-js";
 
-import { InstanceRecord } from "./types.js";
+import { DocumentView } from "./types.js";
 import { getKeyPair } from "./utils.js";
 
 const SCHEMA_SCHEMA =
@@ -86,18 +86,18 @@ type ListSchemasOptions = {
 
 const listSchemas = async (options: ListSchemasOptions) => {
   const session = new p2panda.Session(options.node);
-  const entries: InstanceRecord[] = await session.query({
+  const schemaDocs: DocumentView[] = await session.query({
     schema: SCHEMA_SCHEMA,
   });
 
-  entries.map((entry: InstanceRecord) => {
-    const name = chalk.cyan(entry.name);
-    const description = entry.description;
+  schemaDocs.map((schema: DocumentView) => {
+    const name = chalk.cyan(schema.name);
+    const description = schema.description;
 
-    const fieldsRaw = entry.fields as string;
+    const fieldsRaw = schema.fields as string;
     const fields = "- " + fieldsRaw.split(",").join("\n- ");
     // Split hash onto two lines by regexing groups of max 66 char length
-    const hash = chalk.grey(entry._meta.id.match(/(.{1,66})/g).join("\n"));
+    const hash = chalk.grey(schema._meta.id.match(/(.{1,66})/g).join("\n"));
     console.log(`${name}: ${description}\n${fields}\n${hash}\n`);
   });
 };
